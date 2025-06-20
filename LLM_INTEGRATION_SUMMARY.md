@@ -1,229 +1,307 @@
-# ChatBot LLM Integration Summary 🧠
+# ConfluenceBot with DeepSeek LLM Integration 🧠📚
 
 ## Overview
 
-Your chatbot has been successfully enhanced with **OpenAI GPT integration**! The bot now uses AI-powered responses while maintaining a robust fallback system.
+Your chatbot has been **completely transformed** into a powerful **ConfluenceBot** with **DeepSeek AI integration** and **Confluence page reading capabilities**! The bot can now read your Confluence documentation and answer intelligent questions about your content.
 
 ## What's New
 
 ### ✨ Enhanced Features
 
-1. **LLM-Powered Responses**: Uses OpenAI's GPT-3.5-turbo for intelligent conversations
-2. **Hybrid System**: Falls back to pattern-based responses if LLM is unavailable
-3. **Conversation Context**: Maintains history for contextual AI responses
-4. **Flexible Configuration**: Easy to enable/disable LLM features
-5. **Automated Setup**: One-command deployment with `setup.sh`
+1. **DeepSeek AI Integration**: Uses DeepSeek's powerful chat models for intelligent conversations
+2. **Confluence Page Reading**: Automatically fetches and processes Confluence pages
+3. **Document Question-Answering**: Answers questions based on your Confluence content
+4. **Smart Page Loading**: Automatically detects page references in questions
+5. **Content Search**: Search across Confluence spaces for relevant documentation
+6. **Hybrid Response System**: Falls back to pattern-based responses when needed
+7. **Context Management**: Maintains conversation context with document awareness
 
 ### 🔧 Technical Improvements
 
-- **Enhanced ChatBot Class**: New `generate_llm_response()` method for AI integration
-- **Error Handling**: Graceful fallback when API fails or is unavailable
-- **Environment Configuration**: Support for API keys and flexible settings
-- **Virtual Environment**: Isolated Python environment with all dependencies
-- **Status Monitoring**: Built-in status reporting for LLM integration
+- **DeepSeek Integration**: OpenAI-compatible API with enhanced reasoning capabilities
+- **Confluence API**: Full integration with Atlassian Confluence (Cloud & Server)
+- **Content Processing**: HTML parsing and text extraction from Confluence pages
+- **Caching System**: Intelligent caching of loaded pages for performance
+- **Error Handling**: Robust error handling for API failures
+- **Environment Configuration**: Comprehensive configuration management
 
 ## Files Modified
 
 ### Core Changes
 
-1. **`chatbot.py`** - Enhanced with LLM integration:
-   - Added OpenAI client initialization
-   - New `generate_llm_response()` method
-   - Conversation context management
-   - Hybrid response system (LLM + fallback)
-   - Enhanced status reporting
+1. **`chatbot.py`** - Completely rewritten as ConfluenceBot:
+   - DeepSeek AI integration (replacing OpenAI)
+   - Confluence API integration
+   - Document loading and processing
+   - Question-answering capabilities
+   - Enhanced conversation management
 
-2. **`requirements.txt`** - Added LLM dependencies:
-   - `openai>=1.0.0` for GPT integration
-   - All required dependencies for AI functionality
+2. **`requirements.txt`** - Updated dependencies:
+   - `openai>=1.0.0` (now used for DeepSeek API)
+   - `atlassian-python-api>=3.41.0` for Confluence integration
+   - `beautifulsoup4>=4.12.0` for HTML parsing
+   - `lxml>=4.9.0` for XML processing
 
-3. **`.env.example`** - Environment configuration template:
-   - `OPENAI_API_KEY` for LLM access
+3. **`.env.example`** - Complete environment configuration:
+   - `DEEPSEEK_API_KEY` for AI integration
+   - `CONFLUENCE_URL`, `CONFLUENCE_USERNAME`, `CONFLUENCE_PASSWORD`
+   - `CONFLUENCE_SPACES` for space configuration
    - Slack integration settings
-   - Server configuration options
-
-4. **`README.md`** - Updated with LLM documentation:
-   - Setup instructions for AI features
-   - Usage examples with LLM
-   - Configuration guide
-   - Troubleshooting section
-
-### New Files
-
-5. **`setup.sh`** - Automated deployment script:
-   - Creates virtual environment
-   - Installs dependencies
-   - Configures environment
-   - Provides setup guidance
-
-6. **`LLM_INTEGRATION_SUMMARY.md`** - This documentation file
 
 ## How It Works
 
-### 🔄 Hybrid Response System
+### 🔄 Enhanced AI-Powered Workflow
 
 ```
-User Message → Name Extraction → LLM Available? 
-                                     ↓
-                               Yes → OpenAI API Call → Response
-                                     ↓
-                               No → Pattern Matching → Fallback Response
+User Question → Page Detection → Content Loading → Context Building → DeepSeek AI → Response
+                      ↓                ↓               ↓              ↓
+                Page Reference  → Confluence API → Document Cache → Intelligent Answer
 ```
 
-### 🧠 LLM Integration Flow
+### 🧠 DeepSeek Integration Flow
 
-1. **Message Processing**: User input is processed for name extraction
-2. **Context Building**: Recent conversation history is prepared for AI context
-3. **API Call**: OpenAI GPT-3.5-turbo generates intelligent response
-4. **Fallback**: If LLM fails, pattern-based responses are used
-5. **Response**: User receives either AI-generated or fallback response
+1. **Message Processing**: User input analyzed for Confluence page references
+2. **Content Retrieval**: Automatic loading of referenced Confluence pages
+3. **Context Building**: Relevant content added to conversation context
+4. **AI Generation**: DeepSeek processes question with document context
+5. **Smart Response**: Contextual answer based on loaded documentation
 
-### ⚙️ Configuration Options
+### 📚 Confluence Integration Features
 
-- **LLM Enabled**: Set `OPENAI_API_KEY` in `.env` file
-- **Model Settings**: Configurable in `generate_llm_response()` method
-- **Context Window**: Adjustable conversation history (default: 10 messages)
-- **Response Length**: Configurable max tokens (default: 150)
+- **Automatic Page Loading**: Detects page references in questions
+- **Multi-Space Search**: Search across multiple Confluence spaces
+- **Content Caching**: Efficient caching of loaded pages
+- **HTML Processing**: Clean text extraction from Confluence storage format
+- **Error Recovery**: Graceful handling of missing pages or API errors
 
 ## Setup Instructions
 
 ### Quick Setup
 ```bash
-./setup.sh
-```
-
-### Manual Setup
-```bash
-# 1. Create virtual environment
-python3 -m venv venv
-source venv/bin/activate
-
-# 2. Install dependencies
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 3. Configure environment
+# 2. Configure environment
 cp .env.example .env
-# Edit .env with your API keys
+# Edit .env with your credentials
 
-# 4. Run the bot
-python chatbot.py  # CLI mode
-python slack_bot.py  # Slack integration
+# 3. Run the bot
+python chatbot.py
 ```
 
-### Required API Key
+### Required Credentials
 
-To enable LLM features, you need an OpenAI API key:
-1. Visit [OpenAI Platform](https://platform.openai.com/api-keys)
+#### DeepSeek API
+1. Visit [DeepSeek Platform](https://platform.deepseek.com/api_keys)
 2. Create an account and generate an API key
-3. Add it to your `.env` file:
+3. Add to `.env` file:
    ```
-   OPENAI_API_KEY=sk-your-api-key-here
+   DEEPSEEK_API_KEY=your_api_key_here
+   ```
+
+#### Confluence API
+1. **For Confluence Cloud:**
+   - Create an API token at [Atlassian Account](https://id.atlassian.com/manage-profile/security/api-tokens)
+   - Use your email as username and API token as password
+
+2. **For Confluence Server:**
+   - Use your regular username and password
+
+3. **Configuration:**
+   ```
+   CONFLUENCE_URL=https://yourcompany.atlassian.net/wiki
+   CONFLUENCE_USERNAME=your_email@company.com
+   CONFLUENCE_PASSWORD=your_api_token_or_password
+   CONFLUENCE_SPACES=DEV,DOCS,WIKI
    ```
 
 ## Usage Examples
 
-### With LLM (API Key Configured)
+### Basic Confluence Operations
+
 ```
-🧠 LLM integration enabled with OpenAI GPT!
-📊 Bot status: {'name': 'ChatBot', 'llm_enabled': True, 'conversations': 0, 'user_name': None}
+🤖 ConfluenceBot is ready! Type 'quit' to exit.
 
-You: Can you help me understand Python decorators?
-Bot: I'd be happy to explain Python decorators! A decorator is a design pattern that allows you to modify or extend the behavior of functions or classes without permanently modifying them. Think of it as a wrapper that adds functionality.
+🧠 DeepSeek integration enabled!
+📚 Confluence integration enabled!
 
-You: My name is Sarah
-Bot: Nice to meet you, Sarah! Now that I know your name, I can personalize our conversation better. Would you like me to continue explaining decorators with some practical examples?
+� Try asking:
+  • 'Load page Project Overview'
+  • 'What does the API documentation say about authentication?'
+  • 'Search confluence pages about deployment'
+
+You: Load page "API Documentation"
+Bot: ✅ Successfully loaded page: **API Documentation**
+
+You can now ask me questions about this page content!
+
+You: What are the authentication methods described in the API docs?
+Bot: Based on the API Documentation page I loaded, there are three main authentication methods described:
+
+1. **OAuth 2.0**: Recommended for production applications...
+2. **API Keys**: For server-to-server communication...
+3. **Basic Authentication**: For development and testing...
+
+[The bot provides detailed answers based on the actual page content]
 ```
 
-### Without LLM (Fallback Mode)
+### Advanced Question-Answering
+
 ```
-⚠️  No OpenAI API key found. Using pattern-based responses.
-📊 Bot status: {'name': 'ChatBot', 'llm_enabled': False, 'conversations': 0, 'user_name': None}
+You: What does our deployment guide say about database migrations?
+Bot: I've loaded the "Deployment Guide" page. According to the documentation, database migrations should be handled as follows:
 
-You: Hello!
-Bot: Hi there! What's on your mind?
+1. **Pre-deployment**: Run migration scripts in staging environment
+2. **Backup**: Always backup production database before migration
+3. **Rollback Plan**: Ensure rollback scripts are tested and ready
+...
 
-You: Tell me a joke
-Bot: Why don't scientists trust atoms? Because they make up everything!
+[Bot provides specific information from the loaded Confluence pages]
+```
+
+### Search and Discovery
+
+```
+You: Search confluence pages about security
+Bot: 🔍 Found 5 pages for 'security':
+
+• Security Best Practices (ID: 12345)
+• API Security Guidelines (ID: 12346)  
+• Data Security Policy (ID: 12347)
+• Network Security Setup (ID: 12348)
+• Security Incident Response (ID: 12349)
+
+Would you like me to load any of these pages?
+
+You: Load the API Security Guidelines
+Bot: ✅ Successfully loaded page: **API Security Guidelines**
+
+You can now ask me questions about this page content!
 ```
 
 ## API Usage & Costs
 
-### Cost Estimates (GPT-3.5-turbo)
-- **Rate**: ~$0.002 per 1K tokens
-- **Typical Response**: 150 tokens ≈ $0.0003 per message
-- **Daily Usage**: 100 messages ≈ $0.03 per day
-- **Monthly Usage**: 3000 messages ≈ $0.90 per month
+### DeepSeek API Costs
+- **Extremely Cost-Effective**: Significantly cheaper than GPT-4
+- **High Performance**: Competitive with leading models
+- **Rate Limits**: Generous limits for development and production
 
-### Rate Limits
-- Free tier: Limited requests per minute
-- Paid plans: Higher rate limits available
-- Monitor usage in OpenAI dashboard
+### Confluence API
+- **Rate Limits**: Standard Atlassian API rate limits apply
+- **Caching**: Built-in caching reduces API calls
+- **Efficient**: Only loads pages when needed
 
-## Slack Integration
+## Advanced Features
 
-The LLM integration works seamlessly with Slack:
+### Command System
 
-1. **Direct Messages**: AI-powered responses in DMs
-2. **Channel Mentions**: Intelligent responses when mentioned
-3. **Per-User Context**: Separate conversation history for each user
-4. **Fallback Support**: Pattern-based responses if LLM fails
+- **`load page "Page Title"`** - Explicitly load a specific page
+- **`search confluence pages about X`** - Search for pages
+- **Auto-detection** - Automatically loads pages mentioned in questions
 
-## Monitoring & Debugging
+### Context Management
 
-### Status Checking
-```python
-bot = ChatBot("TestBot", use_llm=True)
-print(bot.get_status())
-# Output: {'name': 'TestBot', 'llm_enabled': True, 'conversations': 0, 'user_name': None}
+- **Conversation History**: Maintains context across questions
+- **Multi-Page Context**: Can reference multiple loaded pages
+- **Smart Caching**: Efficiently manages loaded content
+
+### Error Handling
+
+- **Graceful Degradation**: Falls back to general responses when pages unavailable
+- **Clear Error Messages**: Helpful feedback for missing pages or API issues
+- **Robust Recovery**: Continues functioning even with partial failures
+
+## Configuration Options
+
+### Environment Variables
+
+```bash
+# Required for AI features
+DEEPSEEK_API_KEY=your_key
+
+# Required for Confluence features  
+CONFLUENCE_URL=https://company.atlassian.net/wiki
+CONFLUENCE_USERNAME=email@company.com
+CONFLUENCE_PASSWORD=api_token
+
+# Optional: Limit search to specific spaces
+CONFLUENCE_SPACES=DEV,DOCS,PROJ
+
+# Optional: Slack integration
+SLACK_BOT_TOKEN=xoxb-token
+SLACK_SIGNING_SECRET=secret
 ```
 
-### Common Issues & Solutions
+### Customization Options
 
-1. **"No OpenAI API key found"**
-   - Solution: Add `OPENAI_API_KEY` to `.env` file
+- **System Prompts**: Modify AI behavior and personality
+- **Search Scope**: Configure which Confluence spaces to search
+- **Context Limits**: Adjust how much content to include in responses
+- **Cache Settings**: Configure content caching behavior
 
-2. **"Error generating LLM response"**
-   - Check API key validity
-   - Verify internet connection
-   - Check OpenAI service status
+## Integration with Slack
 
-3. **High API costs**
-   - Monitor usage in OpenAI dashboard
-   - Implement rate limiting if needed
-   - Consider reducing `max_tokens` setting
+The ConfluenceBot works seamlessly with Slack integration:
 
-4. **Slow responses**
-   - Reduce context window size
-   - Lower `max_tokens` value
-   - Check network latency
+1. **Slash Commands**: Use `/confluence load "Page Title"` 
+2. **Direct Messages**: Ask questions about documentation in DMs
+3. **Channel Integration**: Mention the bot for documentation queries
+4. **Per-User Context**: Separate conversation history for each user
+
+## Troubleshooting
+
+### Common Issues
+
+1. **"No DeepSeek API key found"**
+   - Add `DEEPSEEK_API_KEY` to your `.env` file
+   - Verify the key is valid at DeepSeek Platform
+
+2. **"Confluence not configured"**
+   - Check all `CONFLUENCE_*` variables in `.env`
+   - Test credentials with Confluence web interface
+   - Verify API token permissions
+
+3. **"Could not find page"**
+   - Check page title spelling and case
+   - Verify page exists and is accessible
+   - Ensure user has read permissions
+
+4. **"Error generating DeepSeek response"**
+   - Check internet connection
+   - Verify API key validity
+   - Check DeepSeek service status
+
+### Debug Mode
+
+Enable debug logging by setting `DEBUG=true` in your `.env` file for detailed error information.
 
 ## Future Enhancements
 
-### Potential Improvements
+### Planned Features
 
-1. **Multiple LLM Providers**: Support for Anthropic Claude, Google Gemini
-2. **Advanced Context**: Document context, web search integration
-3. **Custom Instructions**: User-specific system prompts
-4. **Rate Limiting**: Built-in usage controls
-5. **Analytics**: Conversation quality metrics
-6. **Caching**: Response caching for common queries
+1. **Multi-Modal Support**: Image and attachment processing
+2. **Advanced Search**: Semantic search across content
+3. **Content Summarization**: Automatic page summaries
+4. **Integration Extensions**: Connect with more Atlassian tools
+5. **Custom Commands**: User-defined shortcuts and aliases
 
-### Easy Extensions
+### Easy Customizations
 
-- **Custom Prompts**: Modify `system_prompt` in ChatBot class
-- **Different Models**: Change model in `generate_llm_response()`
-- **Context Size**: Adjust `limit` parameter in `get_conversation_context()`
-- **Response Length**: Modify `max_tokens` in API call
+- **Custom Prompts**: Modify system prompts for specific use cases
+- **Space Configuration**: Add or remove Confluence spaces
+- **Response Formatting**: Customize how answers are presented
+- **Command Aliases**: Create shortcuts for common operations
 
 ## Conclusion
 
-Your chatbot is now equipped with state-of-the-art AI capabilities while maintaining reliability through its fallback system. The hybrid approach ensures users always receive responses, whether powered by AI or traditional pattern matching.
+Your chatbot is now a **powerful documentation assistant** that combines the reasoning capabilities of DeepSeek AI with comprehensive Confluence integration. It can intelligently answer questions about your documentation, load relevant pages automatically, and maintain context across conversations.
 
 **Key Benefits:**
-- 🎯 More natural and contextual conversations
-- 🔒 Reliable fallback when AI is unavailable
-- 💰 Cost-effective with usage monitoring
-- 🚀 Easy to deploy and configure
-- 📈 Scalable for growing user bases
+- 🎯 **Intelligent Documentation Q&A**: Get precise answers from your Confluence content
+- � **Smart Content Discovery**: Automatically find and load relevant pages
+- 💰 **Cost-Effective**: DeepSeek offers excellent performance at low cost
+- 📚 **Comprehensive Integration**: Full Confluence API support
+- 🚀 **Easy Deployment**: Simple setup with environment variables
+- � **Secure**: Proper credential management and error handling
 
-Ready to experience AI-powered conversations? Add your OpenAI API key and start chatting! 🧠✨
+Ready to transform your documentation experience? Configure your credentials and start asking questions about your Confluence content! 🚀📖
