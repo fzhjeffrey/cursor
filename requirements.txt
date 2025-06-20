@@ -1,0 +1,8 @@
+# ChatBot Dependencies
+# This chatbot uses only Python standard library modules
+# No external dependencies required for basic functionality
+
+# Optional: For enhanced features (not required for basic operation)
+# colorama>=0.4.4  # For colored terminal output
+# click>=8.0.0     # For better CLI interface
+# rich>=10.0.0     # For rich text formatting
