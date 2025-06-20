@@ -1,16 +1,39 @@
 import re
 import random
 import json
+import os
 from datetime import datetime
 from typing import Dict, List, Optional
+from openai import OpenAI
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 class ChatBot:
-    def __init__(self, name: str = "Assistant"):
+    def __init__(self, name: str = "Assistant", use_llm: bool = True):
         self.name = name
         self.conversation_history = []
         self.user_name = None
+        self.use_llm = use_llm
         
-        # Predefined responses for common patterns
+        # Initialize OpenAI client if LLM is enabled
+        self.openai_client = None
+        if self.use_llm and os.environ.get("OPENAI_API_KEY"):
+            try:
+                self.openai_client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+            except Exception as e:
+                print(f"Warning: Could not initialize OpenAI client: {e}")
+                self.openai_client = None
+        
+        # System prompt for the LLM
+        self.system_prompt = f"""You are {self.name}, a friendly and helpful chat bot. 
+        You should be conversational, engaging, and helpful. Keep responses concise but warm.
+        If a user tells you their name, remember it and use it in future responses.
+        You can answer questions, have conversations, tell jokes, and provide helpful information.
+        Be natural and personable in your responses."""
+        
+        # Predefined responses for common patterns (fallback)
         self.responses = {
             'greeting': [
                 "Hello! How can I help you today?",
@@ -67,7 +90,7 @@ class ChatBot:
             ]
         }
         
-        # Patterns for intent recognition
+        # Patterns for intent recognition (fallback)
         self.patterns = {
             'greeting': [r'\b(hi|hello|hey|greetings|good morning|good afternoon|good evening)\b'],
             'goodbye': [r'\b(bye|goodbye|see you|farewell|talk to you later|ttyl)\b'],
@@ -94,6 +117,50 @@ class ChatBot:
                 return match.group(1).capitalize()
         return None
 
+    def get_conversation_context(self, limit: int = 10) -> List[Dict]:
+        """Get recent conversation history for LLM context"""
+        return self.conversation_history[-limit:] if self.conversation_history else []
+
+    def generate_llm_response(self, message: str) -> Optional[str]:
+        """Generate response using OpenAI LLM"""
+        if not self.openai_client:
+            return None
+        
+        try:
+            # Build conversation history for context
+            messages = [{"role": "system", "content": self.system_prompt}]
+            
+            # Add conversation history
+            for conv in self.get_conversation_context():
+                messages.append({"role": "user", "content": conv['user']})
+                if conv['bot']:
+                    messages.append({"role": "assistant", "content": conv['bot']})
+            
+            # Add current message
+            messages.append({"role": "user", "content": message})
+            
+            # Add user name context if known
+            if self.user_name:
+                messages.insert(1, {
+                    "role": "system", 
+                    "content": f"The user's name is {self.user_name}. Use their name naturally in conversation when appropriate."
+                })
+            
+            # Call OpenAI API
+            response = self.openai_client.chat.completions.create(
+                model="gpt-3.5-turbo",
+                messages=messages,
+                max_tokens=150,
+                temperature=0.7,
+                stream=False
+            )
+            
+            return response.choices[0].message.content.strip()
+            
+        except Exception as e:
+            print(f"Error generating LLM response: {e}")
+            return None
+
     def recognize_intent(self, message: str) -> str:
         """Recognize the intent behind a user message"""
         message_lower = message.lower()
@@ -105,8 +172,8 @@ class ChatBot:
         
         return 'default'
 
-    def generate_response(self, message: str) -> str:
-        """Generate an appropriate response based on the message"""
+    def generate_fallback_response(self, message: str) -> str:
+        """Generate fallback response using pattern matching"""
         # Check if user is providing their name
         potential_name = self.get_user_name(message)
         if potential_name:
@@ -125,6 +192,22 @@ class ChatBot:
         # Get random response from the appropriate category
         responses = self.responses.get(intent, self.responses['default'])
         return random.choice(responses)
+
+    def generate_response(self, message: str) -> str:
+        """Generate an appropriate response based on the message"""
+        # Check if user is providing their name (handle this first regardless of LLM)
+        potential_name = self.get_user_name(message)
+        if potential_name:
+            self.user_name = potential_name
+        
+        # Try LLM first if available
+        if self.use_llm and self.openai_client:
+            llm_response = self.generate_llm_response(message)
+            if llm_response:
+                return llm_response
+        
+        # Fall back to pattern-based responses
+        return self.generate_fallback_response(message)
 
     def chat(self, message: str) -> str:
         """Main chat method that processes a message and returns a response"""
@@ -161,7 +244,8 @@ class ChatBot:
             json.dump({
                 'bot_name': self.name,
                 'user_name': self.user_name,
-                'conversation': self.conversation_history
+                'conversation': self.conversation_history,
+                'llm_enabled': self.use_llm and self.openai_client is not None
             }, f, indent=2)
         
         return filename
@@ -171,11 +255,29 @@ class ChatBot:
         self.conversation_history = []
         self.user_name = None
 
+    def get_status(self) -> Dict:
+        """Get bot status information"""
+        return {
+            'name': self.name,
+            'llm_enabled': self.use_llm and self.openai_client is not None,
+            'conversations': len(self.conversation_history),
+            'user_name': self.user_name
+        }
+
 def main():
     """Interactive chat session"""
     print("🤖 ChatBot is ready! Type 'quit' to exit.\n")
     
-    bot = ChatBot("ChatBot")
+    # Check if OpenAI API key is available
+    if os.environ.get("OPENAI_API_KEY"):
+        print("🧠 LLM integration enabled with OpenAI GPT!")
+        bot = ChatBot("ChatBot", use_llm=True)
+    else:
+        print("⚠️  No OpenAI API key found. Using pattern-based responses.")
+        print("   Add OPENAI_API_KEY to your .env file to enable LLM features.")
+        bot = ChatBot("ChatBot", use_llm=False)
+    
+    print(f"📊 Bot status: {bot.get_status()}\n")
     
     while True:
         try:

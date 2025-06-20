@@ -5,6 +5,9 @@ python-dotenv>=1.0.0
 flask>=2.3.0
 requests>=2.31.0
 
+# LLM Integration
+openai>=1.0.0
+
 # Optional: For enhanced features
 colorama>=0.4.4
 click>=8.0.0
