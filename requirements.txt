@@ -1,8 +1,11 @@
-# ChatBot Dependencies
-# This chatbot uses only Python standard library modules
-# No external dependencies required for basic functionality
+# Slack ChatBot Dependencies
+slack-sdk>=3.25.0
+slack-bolt>=1.18.0
+python-dotenv>=1.0.0
+flask>=2.3.0
+requests>=2.31.0
 
-# Optional: For enhanced features (not required for basic operation)
-# colorama>=0.4.4  # For colored terminal output
-# click>=8.0.0     # For better CLI interface
-# rich>=10.0.0     # For rich text formatting
+# Optional: For enhanced features
+colorama>=0.4.4
+click>=8.0.0
+rich>=10.0.0
